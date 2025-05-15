@@ -1,0 +1,11 @@
+# bazel build files
+bazel-bin
+bazel-mlir-tutorial
+bazel-out
+bazel-testlogs
+
+# bazel cache
+bazel-cache
+
+# bazel workspace
+bazel-workspace
