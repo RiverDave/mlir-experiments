@@ -73,6 +73,8 @@ autoconf/autom4te.cache
 # CLion project configuration
 /.idea
 /cmake-build*
+cmake-build-debug/
+tests/Output
 
 #==============================================================================#
 # Directories to ignore (do not add trailing '/'s, they skip symlinks).

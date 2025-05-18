@@ -1,4 +1,4 @@
-set(MLIR_TEST_DEPENDS mlir-opt FileCheck) # Add other tools if needed
+set(MLIR_TEST_DEPENDS mlir-opt FileCheck mlir-runner) # Add other tools if needed
 set(PYTHON_EXECUTABLE python3)
 
 add_custom_target(check-mlir

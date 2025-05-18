@@ -1,1 +1,2 @@
-2.572873e-01 ctlz_simple.mlir
+1.637063e-01 ctlz_simple.mlir
+2.052591e-01 ctlz_simple_functional.mlir
