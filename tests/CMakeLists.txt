@@ -7,3 +7,10 @@ add_custom_target(check-mlir
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   COMMENT "Running MLIR lit tests"
 )
+
+set (MLIR_TUTORIAL_TEST_DEPENDS
+    FileCheck count not
+    mlir-opt
+    mlir-runner
+    # tutorial-opt
+)
