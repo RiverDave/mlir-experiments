@@ -35,5 +35,5 @@ FetchContent_MakeAvailable(or-tools)
 message(STATUS "Done fetching or-tools")
 
 add_subdirectory(tests)
-# add_subdirectory(tools)
+add_subdirectory(tools)
 add_subdirectory(lib)
