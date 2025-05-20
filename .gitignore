@@ -11,6 +11,9 @@ bazel-testlogs
 # Nested build directory
 /build*
 
+build-ninja
+tools/build
+
 # Visual Studio built-in CMake configuration
 .vscode*
 /CMakeSettings.json

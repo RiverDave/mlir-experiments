@@ -16,8 +16,15 @@ set(MLIR_BINARY_DIR ${CMAKE_BINARY_DIR})
 include(AddLLVM)
 include(TableGen)
 
+
+
+# Point to your submodule build
+set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/externals/llvm-project/build/lib/cmake/mlir;${PROJECT_SOURCE_DIR}/externals/llvm-project/build/lib/cmake/llvm")
+
 list(APPEND CMAKE_MODULE_PATH "${MLIR_CMAKE_DIR}")
 include(AddMLIR)
+# Only add the build include directory
+include_directories(BEFORE ${CMAKE_SOURCE_DIR}/externals/llvm-project/build/include)
 include_directories(${LLVM_INCLUDE_DIRS})
 include_directories(${MLIR_INCLUDE_DIRS})
 include_directories(${PROJECT_SOURCE_DIR})
