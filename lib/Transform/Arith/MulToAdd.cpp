@@ -10,6 +10,7 @@ namespace mlir {
         using arith::AddIOp;
         using arith::ConstantOp;
         using arith::MulIOp;
+        using arith::ShLIOp;
 
         // Replace y = C*x with y = C/2*x + C/2*x,where C represents a constant.
         // when C is a power of 2, otherwise do nothing.
@@ -41,28 +42,37 @@ namespace mlir {
                     return failure();
                 }
 
+                // when C = 2^n then X * C = X << N = X * (log2(C))
+                // let's solve for N:
+
+                int64_t N = static_cast<int64_t>(floor(log2(value)));
+
                 // Define new operation
                 ConstantOp newConstant = rewriter.create<ConstantOp>(
-        rhsDefiningOp.getLoc(), rewriter.getIntegerAttr(rhs.getType(), value / 2));
+        rhsDefiningOp.getLoc(), rewriter.getIntegerAttr(lhs.getType(), N));
 
-                MulIOp newMul = rewriter.create<MulIOp>(op.getLoc(), lhs, newConstant);
-                AddIOp newAdd = rewriter.create<AddIOp>(op.getLoc(), newMul, newMul);
+                ShLIOp new_shli = rewriter.create<ShLIOp>(op.getLoc(), lhs, newConstant);
 
+                //===Before shifting:
                 // So the result would be
                 // newMul = lhs * (C/2)
                 // newAdd (C/2) + (C/2)
 
-                /*
+                /* Example:
+                 *
                  * 2 * 8
                  * 2 * 8/2, hence
                  * = (2 * 4) + (2 * 4) => This is where we can keep greedily executing this pass
                  * = ((2 * 2) + (2 * 2)) + ((2 * 2) + (2 * 2))
                  * = ((2 * 1) + (2 * 1) + (2 * 1) + (2 * 1)) + ((2 * 1) + (2 * 1) + (2 * 1) + (2 * 1))
-                 * = ((2) + (2) + (2) + (2)) + ((2) + (2) + (2) + (2))
+                 * = ((2) + (2) + (2) + (2)) + ((2) + (2) + (2) + (2)) = 16
                  * (Okay this is beautiful)
+                 *
+                 *===After Shifting
+                 * 2 << 3 = 16
                  */
 
-                rewriter.replaceOp(op, newAdd);
+                rewriter.replaceOp(op, new_shli);
                 rewriter.eraseOp(rhsDefiningOp);
 
                 return success();

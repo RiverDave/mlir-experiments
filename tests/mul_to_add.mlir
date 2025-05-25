@@ -10,11 +10,9 @@ func.func @just_power_of_two(%arg: i32) -> i32 {
 // CHECK-LABEL: func.func @just_power_of_two(
 // CHECK-SAME:    %[[ARG:.*]]: i32
 // CHECK-SAME:  ) -> i32 {
-// CHECK:   %[[SUM_0:.*]] = arith.addi %[[ARG]], %[[ARG]]
-// CHECK:   %[[SUM_1:.*]] = arith.addi %[[SUM_0]], %[[SUM_0]]
-// CHECK:   %[[SUM_2:.*]] = arith.addi %[[SUM_1]], %[[SUM_1]]
-// CHECK:   return %[[SUM_2]] : i32
-// CHECK: }
+// CHECK:     %[[CST:.*]] = arith.constant 3 : i32
+// CHECK:     %[[SHL:.*]] = arith.shli %arg0, %[[CST]] : i32
+// CHECK:     return %[[SHL]] : i32
 
 func.func @power_of_two_plus_one(%arg: i32) -> i32 {
   %0 = arith.constant 9 : i32
@@ -25,9 +23,8 @@ func.func @power_of_two_plus_one(%arg: i32) -> i32 {
 // CHECK-LABEL: func.func @power_of_two_plus_one(
 // CHECK-SAME:    %[[ARG:.*]]: i32
 // CHECK-SAME:  ) -> i32 {
-// CHECK:   %[[SUM_0:.*]] = arith.addi %[[ARG]], %[[ARG]]
-// CHECK:   %[[SUM_1:.*]] = arith.addi %[[SUM_0]], %[[SUM_0]]
-// CHECK:   %[[SUM_2:.*]] = arith.addi %[[SUM_1]], %[[SUM_1]]
-// CHECK:   %[[SUM_3:.*]] = arith.addi %[[SUM_2]], %[[ARG]]
-// CHECK:   return %[[SUM_3]] : i32
+// CHECK:     %[[CST:.*]] = arith.constant 3 : i32
+// CHECK:     %[[SHL:.*]] = arith.shli %arg0, %[[CST]] : i32
+// CHECK:     %[[ADDT:.*]] = arith.addi %[[SHL]], %arg0 : i32
+// CHECK:   return %[[ADDT]] : i32
 // CHECK: }
