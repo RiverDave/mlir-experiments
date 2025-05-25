@@ -24,7 +24,7 @@ namespace mlir {
                                           PatternRewriter &rewriter) const override {
 
                 Value lhs = op.getOperand(0);
-                Value rhs = op.getOperand(1);
+                Value rhs = op.getOperand(1); // constant value
 
                 // Verify that rhs is an integer
                 arith::ConstantIntOp rhsDefiningOp = rhs.getDefiningOp<arith::ConstantIntOp>();
@@ -34,7 +34,7 @@ namespace mlir {
 
                 int64_t value = rhsDefiningOp.value();
                 //shift bits and sustract 1
-                //Po2's usually have only 1 bitset
+                //Po2's usually have only 1 bitset hence => x - 1 = 0, therefore it is a power of two.
                 bool is_power_of_two = (value & (value -1)) == 0;
 
                 if (!is_power_of_two) {
@@ -54,9 +54,12 @@ namespace mlir {
 
                 /*
                  * 2 * 8
-                 * 2 * 8/2
-                 * (2 * 8/2) + (2 * 8/2)
-                 * Is this correct?
+                 * 2 * 8/2, hence
+                 * = (2 * 4) + (2 * 4) => This is where we can keep greedily executing this pass
+                 * = ((2 * 2) + (2 * 2)) + ((2 * 2) + (2 * 2))
+                 * = ((2 * 1) + (2 * 1) + (2 * 1) + (2 * 1)) + ((2 * 1) + (2 * 1) + (2 * 1) + (2 * 1))
+                 * = ((2) + (2) + (2) + (2)) + ((2) + (2) + (2) + (2))
+                 * (Okay this is beautiful)
                  */
 
                 rewriter.replaceOp(op, newAdd);
@@ -82,7 +85,8 @@ namespace mlir {
             mlir::RewritePatternSet patterns(&getContext());
             patterns.add<PowerOfTwoExpand>(&getContext());
             patterns.add<PeelFromMul>(&getContext());
-            (void)applyPatternsAndFoldGreedily(getOperation(), std::move(patterns));
+
+            (void)applyPatternsGreedily(getOperation(), std::move(patterns));
         }
 
     } // namespace tutorial

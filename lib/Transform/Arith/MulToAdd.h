@@ -16,7 +16,7 @@ namespace mlir {
             StringRef getArgument() const final { return "mul-to-add"; }
 
             StringRef getDescription() const final {
-                return "Convert multiplications to repeated additions";
+                return "Convert multiplicatoins to repeated additions";
             }
         };
 

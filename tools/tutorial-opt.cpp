@@ -1,9 +1,6 @@
 #include <lib/Transform/Arith/MulToAdd.h>
-
 #include "lib/Transform/Affine/AffineFullUnroll.h"
-#include "lib/Transform/Arith/MulToAdd.h"
 #include "mlir/include/mlir/InitAllDialects.h"
-#include "mlir/include/mlir/Pass/PassManager.h"
 #include "mlir/Pass/PassRegistry.h"
 #include "mlir/include/mlir/Tools/mlir-opt/MlirOptMain.h"
 

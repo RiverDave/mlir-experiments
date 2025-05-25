@@ -5,9 +5,10 @@ set (LIBS
     ${dialect_libs}
     ${conversion_libs}
     AffineFullUnroll
+    MulToAdd
     MLIROptLib
     MLIRPass
-    ortools::ortools
+    # ortools::ortools
 )
 
 add_llvm_executable(tutorial-opt tutorial-opt.cpp)
