@@ -23,6 +23,8 @@ set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/externals/llvm-project/build/lib/cm
 
 list(APPEND CMAKE_MODULE_PATH "${MLIR_CMAKE_DIR}")
 include(AddMLIR)
+include(tableGen)
+
 # Only add the build include directory
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/externals/llvm-project/build/include)
 include_directories(${LLVM_INCLUDE_DIRS})
