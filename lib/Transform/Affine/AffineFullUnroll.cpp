@@ -5,7 +5,6 @@
 
 namespace mlir {
     namespace tutorial {
-
 #define GEN_PASS_DEF_AFFINEFULLUNROLL
 #include "lib/Transform/Affine/Passes.h.inc"
 
@@ -18,15 +17,12 @@ namespace mlir {
 
             void runOnOperation() {
                 getOperation()->walk([&](AffineForOp op) {
-                  if (failed(loopUnrollFull(op))) {
-                    op.emitError("unrolling failed");
-                    signalPassFailure();
-                  }
+                    if (failed(loopUnrollFull(op))) {
+                        op.emitError("unrolling failed");
+                        signalPassFailure();
+                    }
                 });
             }
         };
-
-
-
     } // namespace tutorial
 } // namespace mlir

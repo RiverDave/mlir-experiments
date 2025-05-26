@@ -5,8 +5,7 @@
 #include "mlir/include/mlir/Pass/Pass.h"
 
 namespace mlir {
-namespace tutorial {
-
+    namespace tutorial {
 #define GEN_PASS_DEF_MULTOADD
 #include "lib/Transform/Arith/Passes.h.inc"
 
@@ -20,13 +19,13 @@ namespace tutorial {
         //Cannonical optimization constants are always meant to be on the rhs where valid
         // So in effect this would be translated to: C * x => x * C/2
         struct PowerOfTwoExpand :
-          public OpRewritePattern<MulIOp> {
+                public OpRewritePattern<MulIOp> {
             PowerOfTwoExpand(mlir::MLIRContext *context)
-                : OpRewritePattern<MulIOp>(context, /*benefit=*/2) {}
+                : OpRewritePattern<MulIOp>(context, /*benefit=*/2) {
+            }
 
             LogicalResult matchAndRewrite(MulIOp op,
                                           PatternRewriter &rewriter) const override {
-
                 Value lhs = op.getOperand(0);
                 Value rhs = op.getOperand(1); // constant value
 
@@ -39,7 +38,7 @@ namespace tutorial {
                 int64_t value = rhsDefiningOp.value();
                 //shift bits and sustract 1
                 //Po2's usually have only 1 bitset hence => x - 1 = 0, therefore it is a power of two.
-                bool is_power_of_two = (value & (value -1)) == 0;
+                bool is_power_of_two = (value & (value - 1)) == 0;
 
                 if (!is_power_of_two) {
                     return failure();
@@ -52,7 +51,7 @@ namespace tutorial {
 
                 // Define new operation
                 ConstantOp newConstant = rewriter.create<ConstantOp>(
-        rhsDefiningOp.getLoc(), rewriter.getIntegerAttr(lhs.getType(), N));
+                    rhsDefiningOp.getLoc(), rewriter.getIntegerAttr(lhs.getType(), N));
 
                 ShLIOp new_shli = rewriter.create<ShLIOp>(op.getLoc(), lhs, newConstant);
 
@@ -85,9 +84,10 @@ namespace tutorial {
         //we benefit of this since there could be a case above where C is not a power of two. (2^C)
         // Replace y = 9*x with y = 8*x + x
         struct PeelFromMul :
-          public OpRewritePattern<MulIOp> {
+                public OpRewritePattern<MulIOp> {
             PeelFromMul(mlir::MLIRContext *context)
-                : OpRewritePattern<MulIOp>(context, /*benefit=*/1) {}
+                : OpRewritePattern<MulIOp>(context, /*benefit=*/1) {
+            }
 
             LogicalResult matchAndRewrite(MulIOp op,
                                           PatternRewriter &rewriter) const override {
@@ -117,16 +117,15 @@ namespace tutorial {
         };
 
 
-    struct MulToAdd : impl::MulToAddBase<MulToAdd> {
-          using MulToAddBase::MulToAddBase;
+        struct MulToAdd : impl::MulToAddBase<MulToAdd> {
+            using MulToAddBase::MulToAddBase;
 
-          void runOnOperation() {
-            mlir::RewritePatternSet patterns(&getContext());
-            patterns.add<PowerOfTwoExpand>(&getContext());
-            patterns.add<PeelFromMul>(&getContext());
-            (void)applyPatternsAndFoldGreedily(getOperation(), std::move(patterns));
-          }
-    };
-
+            void runOnOperation() {
+                mlir::RewritePatternSet patterns(&getContext());
+                patterns.add<PowerOfTwoExpand>(&getContext());
+                patterns.add<PeelFromMul>(&getContext());
+                (void) applyPatternsAndFoldGreedily(getOperation(), std::move(patterns));
+            }
+        };
     } // namespace tutorial
 } // namespace mlir
