@@ -5,7 +5,10 @@
 #include "mlir/include/mlir/Pass/Pass.h"
 
 namespace mlir {
-    namespace tutorial {
+namespace tutorial {
+
+#define GEN_PASS_DEF_MULTOADD
+#include "lib/Transform/Arith/Passes.h.inc"
 
         using arith::AddIOp;
         using arith::ConstantOp;
@@ -113,14 +116,17 @@ namespace mlir {
             }
         };
 
-        void MulToAddPass::runOnOperation() {
+
+    struct MulToAdd : impl::MulToAddBase<MulToAdd> {
+          using MulToAddBase::MulToAddBase;
+
+          void runOnOperation() {
             mlir::RewritePatternSet patterns(&getContext());
-            //The current Pipeline...
             patterns.add<PowerOfTwoExpand>(&getContext());
             patterns.add<PeelFromMul>(&getContext());
-
-            (void)applyPatternsGreedily(getOperation(), std::move(patterns));
-        }
+            (void)applyPatternsAndFoldGreedily(getOperation(), std::move(patterns));
+          }
+    };
 
     } // namespace tutorial
 } // namespace mlir

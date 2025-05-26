@@ -1,9 +1,7 @@
 set(LLVM_TARGET_DEFINITIONS Passes.td)
-mlir_tablegen(Passes.h.inc --gen-pass-decls)
+mlir_tablegen(Passes.h.inc --gen-pass-decls -name Affine)
 #mlir_tablegen(Passes AffinePassses ./ -gen-pass-doc)
 
-# Create the TableGen target
-add_public_tablegen_target(AffineFullUnrollPasses)
 
 add_mlir_library(AffineFullUnroll
     AffineFullUnroll.cpp
@@ -16,6 +14,8 @@ add_mlir_library(AffineFullUnroll
 
     LINK_LIBS PUBLIC
 )
-
 # Ensure the build directory is included
 target_include_directories(AffineFullUnroll PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+
+# Create the TableGen target
+add_public_tablegen_target(AffineFullUnrollPasses)
