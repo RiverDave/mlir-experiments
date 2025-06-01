@@ -1,5 +1,0 @@
-6.676102e-02 affine_loop_unroll.mlir
-1.806200e-01 ctlz_simple.mlir
-2.201829e-01 ctlz_simple_functional.mlir
--3.739333e-02 affine_loop_failing.mlir
--3.505802e-02 unrollable_loop.mlir

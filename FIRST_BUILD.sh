@@ -6,8 +6,8 @@ THIRDPARTY_LLVM_DIR=$PWD/externals/llvm-project
 BUILD_DIR=$THIRDPARTY_LLVM_DIR/build
 INSTALL_DIR=$THIRDPARTY_LLVM_DIR/install
 
-mkdir -p $BUILD_DIR
-mkdir -p $INSTALL_DIR
+#mkdir -p $BUILD_DIR
+#mkdir -p $INSTALL_DIR
 
 pushd $BUILD_DIR
 
@@ -20,6 +20,7 @@ cmake ../llvm -G $BUILD_SYSTEM \
       -DLLVM_PARALLEL_LINK_JOBS=1 \
       -DLLVM_BUILD_EXAMPLES=OFF \
       -DLLVM_INSTALL_UTILS=ON \
+      -DLLVM_TARGETS_TO_BUILD=host \
       -DCMAKE_OSX_ARCHITECTURES="$(uname -m)" \
       -DCMAKE_BUILD_TYPE=Release \
       -DLLVM_ENABLE_ASSERTIONS=ON \
@@ -27,7 +28,7 @@ cmake ../llvm -G $BUILD_SYSTEM \
       -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
       -DLLVM_ENABLE_PROJECTS='mlir' \
       -DDEFAULT_SYSROOT="$(xcrun --show-sdk-path)" \
-      -DCMAKE_OSX_SYSROOT="$(xcrun --show-sdk-path)"
+      -DCMAKE_OSX_SYSROOT="$(xcrun --show-sdk-path)" \
 
 cmake --build . --target check-mlir
 

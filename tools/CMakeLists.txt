@@ -8,6 +8,7 @@ set (LIBS
     MulToAdd
     MLIROptLib
     MLIRPass
+    Poly
     # ortools::ortools
 )
 
